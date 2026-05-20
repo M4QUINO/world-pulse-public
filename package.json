@@ -3,6 +3,8 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "build": "npm run build:render",
+    "start": "npm run build:render && npm run start:render",
     "build:render": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
     "start:render": "npm start --prefix backend"
   },
