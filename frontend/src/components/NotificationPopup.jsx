@@ -16,7 +16,18 @@ const NotificationPopup = ({ news, onClose, onOpen }) => {
           <div className="overflow-hidden rounded-[1.9rem] border border-white/15 bg-white/90 shadow-[0_24px_70px_rgba(15,23,42,0.24)] backdrop-blur-xl dark:bg-slate-950/88">
             <div className="grid grid-cols-1 sm:grid-cols-[0.9fr_1.1fr]">
               <div className="relative min-h-[9rem] sm:min-h-[10rem]">
-                <img src={news.imageUrl} alt={news.title} className="absolute inset-0 h-full w-full object-cover" />
+                <img
+                  src={news.imageUrl}
+                  alt={news.title}
+                  loading="lazy"
+                  decoding="async"
+                  onError={(event) => {
+                    if (news.fallbackImageUrl && event.currentTarget.src !== news.fallbackImageUrl) {
+                      event.currentTarget.src = news.fallbackImageUrl;
+                    }
+                  }}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent" />
                 <div className="absolute bottom-3 left-3 right-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white">
                   {news.scopeLabel} / {news.categoryLabel}

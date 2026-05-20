@@ -77,6 +77,12 @@ const RadioPlayer = () => {
   const [volume, setVolume] = useState(0.72);
   const [needsGesture, setNeedsGesture] = useState(false);
   const [statusMessage, setStatusMessage] = useState('Preparando a radio...');
+  const [isMobileBrowser, setIsMobileBrowser] = useState(() => {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+    return window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
+  });
 
   const audioRef = useRef(null);
   const autoplayAttemptedRef = useRef(false);
@@ -265,11 +271,31 @@ const RadioPlayer = () => {
   }, [volume]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia('(max-width: 768px), (pointer: coarse)');
+    const updateMode = () => setIsMobileBrowser(mediaQuery.matches);
+
+    updateMode();
+    mediaQuery.addEventListener?.('change', updateMode);
+
+    return () => mediaQuery.removeEventListener?.('change', updateMode);
+  }, []);
+
+  useEffect(() => {
     if (autoplayAttemptedRef.current) {
       return undefined;
     }
 
     autoplayAttemptedRef.current = true;
+
+    if (isMobileBrowser) {
+      setStatus('idle');
+      setStatusMessage('Toque no player para ligar a radio no celular.');
+      return undefined;
+    }
 
     const timer = window.setTimeout(() => {
       startPlayback(getStoredStation(), { source: 'boot', allowMutedBoot: true });
@@ -278,7 +304,7 @@ const RadioPlayer = () => {
     return () => {
       window.clearTimeout(timer);
     };
-  }, []);
+  }, [isMobileBrowser]);
 
   useEffect(() => {
     if (!needsGesture) {

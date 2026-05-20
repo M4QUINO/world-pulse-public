@@ -65,7 +65,18 @@ const ArticleModal = ({ article, onClose, onCommentCountChange }) => {
                 <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
                   <div className="overflow-hidden rounded-[2rem] border border-white/12 bg-slate-950 shadow-[0_18px_55px_rgba(15,23,42,0.18)]">
                     <div className="aspect-[16/10]">
-                      <img src={article.imageUrl} alt={article.imageAlt || article.title} className="h-full w-full object-cover" />
+                      <img
+                        src={article.imageUrl}
+                        alt={article.imageAlt || article.title}
+                        loading="lazy"
+                        decoding="async"
+                        onError={(event) => {
+                          if (article.fallbackImageUrl && event.currentTarget.src !== article.fallbackImageUrl) {
+                            event.currentTarget.src = article.fallbackImageUrl;
+                          }
+                        }}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                   </div>
 

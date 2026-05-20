@@ -27,6 +27,14 @@ const NewsCard = ({ item, featured = false, onOpen }) => {
           <img
             src={item.imageUrl}
             alt={item.imageAlt || item.title}
+            loading="lazy"
+            decoding="async"
+            fetchPriority={featured ? 'high' : 'low'}
+            onError={(event) => {
+              if (item.fallbackImageUrl && event.currentTarget.src !== item.fallbackImageUrl) {
+                event.currentTarget.src = item.fallbackImageUrl;
+              }
+            }}
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/15 to-transparent" />

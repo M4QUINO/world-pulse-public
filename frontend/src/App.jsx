@@ -27,7 +27,9 @@ import { ThemeProvider } from './context/ThemeContext';
 
 const API_BASE = import.meta.env.VITE_API_URL?.trim() || '/api';
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL?.trim() || undefined;
-const PAGE_SIZE = 9;
+const DESKTOP_PAGE_SIZE = 9;
+const MOBILE_PAGE_SIZE = 5;
+const MOBILE_MAX_RENDERED_ITEMS = 35;
 
 const CATEGORY_FILTERS = [
   { value: 'todas', label: 'Todas' },
@@ -152,6 +154,12 @@ const normalizeNewsItem = (item) => {
 };
 
 const AppContent = () => {
+  const [isMobileViewport, setIsMobileViewport] = useState(() => {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+    return window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
+  });
   const [meta, setMeta] = useState(null);
   const [editorial, setEditorial] = useState(null);
   const [debates, setDebates] = useState([]);
@@ -169,6 +177,27 @@ const AppContent = () => {
   const [activePopup, setActivePopup] = useState(null);
 
   const sentinelRef = useRef(null);
+  const activeCategoryRef = useRef(activeCategory);
+  const searchRef = useRef(search);
+
+  useEffect(() => {
+    activeCategoryRef.current = activeCategory;
+    searchRef.current = search;
+  }, [activeCategory, search, isMobileViewport]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia('(max-width: 768px), (pointer: coarse)');
+    const updateViewportMode = () => setIsMobileViewport(mediaQuery.matches);
+
+    updateViewportMode();
+    mediaQuery.addEventListener?.('change', updateViewportMode);
+
+    return () => mediaQuery.removeEventListener?.('change', updateViewportMode);
+  }, []);
 
   const fetchShellData = async () => {
     try {
@@ -205,7 +234,7 @@ const AppContent = () => {
       const response = await axios.get(`${API_BASE}/feed`, {
         params: {
           page,
-          limit: PAGE_SIZE,
+          limit: isMobileViewport ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE,
           category: category !== 'todas' ? category : undefined,
           q: searchTerm.trim() || undefined,
         },
@@ -213,7 +242,10 @@ const AppContent = () => {
 
       const normalizedItems = (response.data.items || []).map(normalizeNewsItem);
 
-      setFeedItems((current) => (reset ? normalizedItems : [...current, ...normalizedItems]));
+      setFeedItems((current) => {
+        const nextItems = reset ? normalizedItems : [...current, ...normalizedItems];
+        return isMobileViewport ? nextItems.slice(-MOBILE_MAX_RENDERED_ITEMS) : nextItems;
+      });
       setFeedPage(response.data.page || page);
       setHasMore(Boolean(response.data.hasMore));
       setError('');
@@ -259,14 +291,14 @@ const AppContent = () => {
         }
       },
       {
-        rootMargin: '420px 0px',
+        rootMargin: isMobileViewport ? '160px 0px' : '420px 0px',
       },
     );
 
     observer.observe(sentinelRef.current);
 
     return () => observer.disconnect();
-  }, [feedPage, hasMore, loadingFeed, loadingMore, activeCategory, search]);
+  }, [feedPage, hasMore, loadingFeed, loadingMore, activeCategory, search, isMobileViewport]);
 
   useEffect(() => {
     const socketClient = io(SOCKET_URL, {
@@ -281,15 +313,15 @@ const AppContent = () => {
       loadFeed({
         page: 1,
         reset: true,
-        category: activeCategory,
-        searchTerm: search,
+        category: activeCategoryRef.current,
+        searchTerm: searchRef.current,
       });
     });
 
     return () => {
       socketClient.disconnect();
     };
-  }, [activeCategory, search]);
+  }, []);
 
   useEffect(() => {
     if (!activePopup) {
