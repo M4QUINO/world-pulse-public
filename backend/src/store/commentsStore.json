@@ -1,0 +1,122 @@
+{
+  "corredor-verde-regional": [
+    {
+      "id": "seed-corredor-verde-regional-1",
+      "slug": "corredor-verde-regional",
+      "author": "Voz Urbana",
+      "tone": "analise",
+      "body": "Esse tipo de obra mexe mais com produtividade do que parece. Quando o deslocamento melhora, o comercio local responde bem rapido.",
+      "likes": 12,
+      "createdAt": "2026-05-18T12:48:26.091Z"
+    },
+    {
+      "id": "seed-corredor-verde-regional-2",
+      "slug": "corredor-verde-regional",
+      "author": "Pulso Local",
+      "tone": "pergunta",
+      "body": "Minha duvida e se a prefeitura vai conseguir manter a operacao e a manutencao depois da inauguracao.",
+      "likes": 5,
+      "createdAt": "2026-05-18T11:48:26.092Z"
+    }
+  ],
+  "marco-ia-congresso": [
+    {
+      "id": "seed-marco-ia-congresso-1",
+      "slug": "marco-ia-congresso",
+      "author": "Leitor Civico",
+      "tone": "analise",
+      "body": "A discussao ficou interessante porque agora nao e so tecnologia. Virou tema de governanca, mercado e reputacao ao mesmo tempo.",
+      "likes": 18,
+      "createdAt": "2026-05-18T12:48:26.092Z"
+    },
+    {
+      "id": "seed-marco-ia-congresso-2",
+      "slug": "marco-ia-congresso",
+      "author": "Ponto Aberto",
+      "tone": "concordo",
+      "body": "Se vier clareza regulatoria, muita empresa vai conseguir tirar projeto de IA do piloto e colocar em producao com menos receio.",
+      "likes": 9,
+      "createdAt": "2026-05-18T11:48:26.092Z"
+    },
+    {
+      "id": "seed-marco-ia-congresso-3",
+      "slug": "marco-ia-congresso",
+      "author": "Eco Global",
+      "tone": "discordo",
+      "body": "Regra demais cedo demais tambem pode travar inovacao. O equilibrio vai ser o ponto mais delicado.",
+      "likes": 7,
+      "createdAt": "2026-05-18T10:48:26.092Z"
+    }
+  ],
+  "diplomacia-oriente-medio": [
+    {
+      "id": "seed-diplomacia-oriente-medio-1",
+      "slug": "diplomacia-oriente-medio",
+      "author": "Radar Livre",
+      "tone": "analise",
+      "body": "Quando esse tema esquenta, energia e logistica sentem primeiro. O impacto economico quase sempre chega antes da manchete amadurecer.",
+      "likes": 14,
+      "createdAt": "2026-05-18T12:48:26.093Z"
+    },
+    {
+      "id": "seed-diplomacia-oriente-medio-2",
+      "slug": "diplomacia-oriente-medio",
+      "author": "Leitor Global",
+      "tone": "pergunta",
+      "body": "Queria ver mais contexto historico nessas negociaes, porque so a manchete nao explica por que a tensao sobe tao rapido.",
+      "likes": 6,
+      "createdAt": "2026-05-18T11:48:26.093Z"
+    }
+  ],
+  "chips-infra-ia": [
+    {
+      "id": "seed-chips-infra-ia-1",
+      "slug": "chips-infra-ia",
+      "author": "Pulso Tech",
+      "tone": "concordo",
+      "body": "Infra de IA virou o novo campo de batalha real. Quem controla energia, chip e inferencia controla o ritmo do mercado.",
+      "likes": 16,
+      "createdAt": "2026-05-18T12:48:26.093Z"
+    },
+    {
+      "id": "seed-chips-infra-ia-2",
+      "slug": "chips-infra-ia",
+      "author": "Voz de Produto",
+      "tone": "analise",
+      "body": "O mais importante e que agora custo de operacao entrou na conversa. Nao adianta benchmark forte sem previsibilidade de uso.",
+      "likes": 11,
+      "createdAt": "2026-05-18T11:48:26.093Z"
+    }
+  ],
+  "servis-automacao-operacional": [
+    {
+      "id": "seed-servis-automacao-operacional-1",
+      "slug": "servis-automacao-operacional",
+      "author": "Eco Operacional",
+      "tone": "analise",
+      "body": "No setor de servicos, produtividade sem padrao de execucao vira confusao. Gostei de ver a pauta olhando margem e SLA junto.",
+      "likes": 13,
+      "createdAt": "2026-05-18T12:48:26.093Z"
+    },
+    {
+      "id": "seed-servis-automacao-operacional-2",
+      "slug": "servis-automacao-operacional",
+      "author": "Ponto Livre",
+      "tone": "concordo",
+      "body": "Automacao ajuda, mas so funciona quando o time entende o processo. Ferramenta sem treinamento nao resolve gargalo antigo.",
+      "likes": 8,
+      "createdAt": "2026-05-18T11:48:26.093Z"
+    }
+  ],
+  "clubes-investimento-dados": [
+    {
+      "id": "3105ecdd-390",
+      "slug": "clubes-investimento-dados",
+      "author": "Leitor Local 560",
+      "tone": "analise",
+      "body": "é uma boa",
+      "likes": 0,
+      "createdAt": "2026-05-18T14:50:23.362Z"
+    }
+  ]
+}
