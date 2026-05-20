@@ -17,46 +17,52 @@ const STORAGE_KEY = 'world_pulse_radio_station';
 
 const STATIONS = [
   {
+    id: 'opovo-cbn-ce',
+    name: 'O POVO CBN Fortaleza',
+    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/OPOVO_CBN.mp3',
+    siteUrl: 'https://radios.opovo.com.br/opovocbn/',
+    genre: 'Esporte / Noticias / Debates',
+    location: 'Fortaleza (CE) - 95.5 FM',
+  },
+  {
+    id: 'verdinha-ce',
+    name: 'Verdinha FM',
+    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/VERDINHAFM.mp3',
+    siteUrl: 'https://verdinha.verdesmares.com.br/',
+    genre: 'Esporte / Jornalismo / Ceara e Fortaleza',
+    location: 'Fortaleza (CE) - 92.5 FM',
+  },
+  {
+    id: 'opovo-cbn-cariri',
+    name: 'O POVO CBN Cariri',
+    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/OPOVO_CBN_CARIRI.mp3',
+    siteUrl: 'https://radios.opovo.com.br/opovocbn/',
+    genre: 'Noticias / Esporte / Cariri',
+    location: 'Crato / Juazeiro (CE) - 93.5 FM',
+  },
+  {
+    id: 'jangadeiro-bandnews-ce',
+    name: 'Jangadeiro BandNews FM',
+    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/BANDNEWSFM_FORAAC_SC',
+    siteUrl: 'https://www.tudoradio.com/player/radio/6574-bandnews-fm',
+    genre: 'Noticias / Esporte / Transito',
+    location: 'Fortaleza (CE) - 101.7 FM',
+  },
+  {
     id: 'bandnews-sp',
     name: 'BandNews FM SP',
     url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/BANDNEWSFM_SPAAC_SC',
+    siteUrl: 'https://www.band.uol.com.br/radio/bandnews-fm',
     genre: 'Noticias / Jornalismo',
-    location: 'Sao Paulo (SP)',
-  },
-  {
-    id: 'cbn-sp',
-    name: 'CBN Sao Paulo',
-    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CBN_SPAAC_SC',
-    genre: 'Noticias / Cidade',
-    location: 'Sao Paulo (SP)',
+    location: 'Rede nacional',
   },
   {
     id: 'bandeirantes',
     name: 'Radio Bandeirantes',
     url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/RadioBandeirantesAAC_SC',
+    siteUrl: 'https://www.band.uol.com.br/radio/bandeirantes',
     genre: 'Jornalismo / Esportes',
-    location: 'Nacional',
-  },
-  {
-    id: 'nova-brasil',
-    name: 'Nova Brasil FM',
-    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/NOVABRASIL_SPAAC_SC',
-    genre: 'MPB / Musica Brasileira',
-    location: 'Nacional',
-  },
-  {
-    id: 'alvorada',
-    name: 'Alvorada FM',
-    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_ALVORADAAAC_SC',
-    genre: 'Pop / Adulto contemporaneo',
-    location: 'Belo Horizonte (MG)',
-  },
-  {
-    id: 'bandnews-rj',
-    name: 'BandNews FM RJ',
-    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/BANDNEWSFM_RJAAC.aac',
-    genre: 'Noticias / Jornalismo',
-    location: 'Rio de Janeiro (RJ)',
+    location: 'Rede nacional',
   },
 ];
 
@@ -419,9 +425,21 @@ const RadioPlayer = () => {
               )}
 
               {status === 'error' ? (
-                <div className="mb-4 flex items-center gap-2 rounded-[1.4rem] border border-red-500/20 bg-red-500/10 px-3 py-3 text-[11px] font-semibold text-red-300">
-                  <AlertTriangle className="h-4 w-4" />
-                  Esse stream falhou. Escolha outra estacao abaixo.
+                <div className="mb-4 rounded-[1.4rem] border border-red-500/20 bg-red-500/10 px-3 py-3 text-[11px] font-semibold text-red-300">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
+                    Esse stream falhou no navegador.
+                  </div>
+                  {currentStation.siteUrl ? (
+                    <a
+                      href={currentStation.siteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex rounded-full bg-white/10 px-3 py-2 text-white transition hover:bg-white/16"
+                    >
+                      Abrir site oficial da radio
+                    </a>
+                  ) : null}
                 </div>
               ) : null}
 

@@ -23,6 +23,7 @@ import SpotifyPlayer from './components/SpotifyPlayer';
 import ArticleModal from './components/ArticleModal';
 import EditorialBoard from './components/EditorialBoard';
 import StudentHub from './components/StudentHub';
+import TodayBrief from './components/TodayBrief';
 import { ThemeProvider } from './context/ThemeContext';
 
 const API_BASE = import.meta.env.VITE_API_URL?.trim() || '/api';
@@ -532,6 +533,7 @@ const AppContent = () => {
         </section>
 
         <EditorialBoard editorial={loadingShell ? null : editorial} onOpenArticle={openArticle} />
+        <TodayBrief />
         <StudentHub />
 
         <section className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_21rem]">

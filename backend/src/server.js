@@ -10,6 +10,7 @@ require('dotenv').config();
 const { addComment, getCommentsBySlug, getTrendingDebates, seedCommentsStore } = require('./services/commentsService');
 const { getEditorial, getFeed, getMeta, getNews, fetchNewNews, seedStore } = require('./services/newsService');
 const { getStudyHubData, searchStudyMaterials } = require('./services/studentResearchService');
+const { getTodayBrief } = require('./services/todayService');
 
 const app = express();
 const server = http.createServer(app);
@@ -81,6 +82,10 @@ app.get('/api/study/search', (req, res) => {
       limit: req.query.limit,
     }),
   );
+});
+
+app.get('/api/today', (req, res) => {
+  res.json(getTodayBrief());
 });
 
 app.get('/api/debates', (req, res) => {
