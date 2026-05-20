@@ -91,8 +91,14 @@ const TodayBrief = () => {
           <div className="grid gap-3 md:grid-cols-2">
             {(brief?.brazil || []).map((item) => (
               <article key={item.title} className="rounded-[1.5rem] border border-white/15 bg-white/75 p-4 dark:bg-white/6">
+                <div className="mb-2 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-300">
+                  {item.date}
+                </div>
                 <h3 className="text-base font-semibold leading-6 text-slate-950 dark:text-white">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.summary}</p>
+                <p className="mt-3 rounded-[1.1rem] bg-slate-950/5 px-3 py-3 text-sm leading-6 text-slate-600 dark:bg-white/8 dark:text-slate-300">
+                  <span className="font-semibold text-slate-950 dark:text-white">Por que existe:</span> {item.why}
+                </p>
                 <div className="mt-3 text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
                   {item.source}
                 </div>
@@ -109,8 +115,14 @@ const TodayBrief = () => {
           <div className="grid gap-3 md:grid-cols-2">
             {(brief?.world || []).map((item) => (
               <article key={item.title} className="rounded-[1.5rem] border border-white/15 bg-white/75 p-4 dark:bg-white/6">
+                <div className="mb-2 text-[10px] font-black uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300">
+                  {item.date}
+                </div>
                 <h3 className="text-base font-semibold leading-6 text-slate-950 dark:text-white">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.summary}</p>
+                <p className="mt-3 rounded-[1.1rem] bg-slate-950/5 px-3 py-3 text-sm leading-6 text-slate-600 dark:bg-white/8 dark:text-slate-300">
+                  <span className="font-semibold text-slate-950 dark:text-white">Por que existe:</span> {item.why}
+                </p>
                 <div className="mt-3 text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">
                   {item.source}
                 </div>

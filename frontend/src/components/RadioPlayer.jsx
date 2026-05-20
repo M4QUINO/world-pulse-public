@@ -17,34 +17,43 @@ const STORAGE_KEY = 'world_pulse_radio_station';
 
 const STATIONS = [
   {
-    id: 'opovo-cbn-ce',
-    name: 'O POVO CBN Fortaleza',
-    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/OPOVO_CBN.mp3',
-    siteUrl: 'https://radios.opovo.com.br/opovocbn/',
-    genre: 'Esporte / Noticias / Debates',
-    location: 'Fortaleza (CE) - 95.5 FM',
-  },
-  {
     id: 'verdinha-ce',
     name: 'Verdinha FM',
-    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/VERDINHAFM.mp3',
+    url: 'https://5a1c76baf08c0.streamlock.net/z18-live/stream/playlist.m3u8',
     siteUrl: 'https://verdinha.verdesmares.com.br/',
+    streamType: 'hls',
     genre: 'Esporte / Jornalismo / Ceara e Fortaleza',
     location: 'Fortaleza (CE) - 92.5 FM',
   },
   {
+    id: 'novabrasil-fortaleza',
+    name: 'Novabrasil Fortaleza',
+    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/NOVABRASIL_FORAAC.aac',
+    siteUrl: 'https://novabrasilfm.com.br/',
+    genre: 'Musica brasileira / Noticias locais',
+    location: 'Fortaleza (CE) - 106.5 FM',
+  },
+  {
+    id: 'opovo-cbn-ce',
+    name: 'O POVO CBN Fortaleza',
+    siteUrl: 'https://radios.opovo.com.br/opovocbn/',
+    externalOnly: true,
+    genre: 'Esporte / Noticias / Debates',
+    location: 'Fortaleza (CE) - 95.5 FM',
+  },
+  {
     id: 'opovo-cbn-cariri',
     name: 'O POVO CBN Cariri',
-    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/OPOVO_CBN_CARIRI.mp3',
     siteUrl: 'https://radios.opovo.com.br/opovocbn/',
+    externalOnly: true,
     genre: 'Noticias / Esporte / Cariri',
     location: 'Crato / Juazeiro (CE) - 93.5 FM',
   },
   {
     id: 'jangadeiro-bandnews-ce',
-    name: 'Jangadeiro BandNews FM',
-    url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/BANDNEWSFM_FORAAC_SC',
-    siteUrl: 'https://www.tudoradio.com/player/radio/6574-bandnews-fm',
+    name: 'BandNews FM Fortaleza',
+    siteUrl: 'https://tudoradio.com/player/radio/374-bandnews-fm',
+    externalOnly: true,
     genre: 'Noticias / Esporte / Transito',
     location: 'Fortaleza (CE) - 101.7 FM',
   },
@@ -72,7 +81,13 @@ const getStoredStation = () => {
   }
 
   const storedId = window.localStorage.getItem(STORAGE_KEY);
-  return STATIONS.find((station) => station.id === storedId) || STATIONS[0];
+  const storedStation = STATIONS.find((station) => station.id === storedId);
+
+  if (!storedStation || storedStation.externalOnly) {
+    return STATIONS[0];
+  }
+
+  return storedStation;
 };
 
 const RadioPlayer = () => {
@@ -91,6 +106,7 @@ const RadioPlayer = () => {
   });
 
   const audioRef = useRef(null);
+  const hlsRef = useRef(null);
   const autoplayAttemptedRef = useRef(false);
   const manualPauseRef = useRef(false);
   const unmuteTimerRef = useRef(null);
@@ -111,7 +127,7 @@ const RadioPlayer = () => {
     }
   };
 
-  const prepareAudio = (station) => {
+  const prepareAudio = async (station) => {
     const audio = audioRef.current;
     if (!audio) {
       return null;
@@ -119,8 +135,36 @@ const RadioPlayer = () => {
 
     if (audio.dataset.stationId !== station.id) {
       audio.pause();
-      audio.src = station.url;
-      audio.load();
+
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+      }
+
+      if (station.streamType === 'hls') {
+        if (audio.canPlayType('application/vnd.apple.mpegurl')) {
+          audio.src = station.url;
+          audio.load();
+        } else {
+          const { default: Hls } = await import('hls.js');
+          if (!Hls.isSupported()) {
+            throw new Error('Este navegador nao suporta transmissao HLS.');
+          }
+
+          const hls = new Hls({
+            enableWorker: false,
+            lowLatencyMode: false,
+          });
+
+          hls.loadSource(station.url);
+          hls.attachMedia(audio);
+          hlsRef.current = hls;
+        }
+      } else {
+        audio.src = station.url;
+        audio.load();
+      }
+
       audio.dataset.stationId = station.id;
     }
 
@@ -135,12 +179,26 @@ const RadioPlayer = () => {
   };
 
   const startPlayback = async (station = currentStation, options = {}) => {
-    const audio = prepareAudio(station);
-    if (!audio) {
+    const { source = 'manual', allowMutedBoot = false } = options;
+
+    if (station.externalOnly || !station.url) {
+      const audio = audioRef.current;
+      if (audio) {
+        audio.pause();
+      }
+
+      manualPauseRef.current = true;
+      setCurrentStation(station);
+      persistStation(station);
+      setIsPlaying(false);
+      setNeedsGesture(false);
+      setStatus('error');
+      setIsOpen(true);
+      setStatusMessage(
+        `${station.name} bloqueia player externo. Use o botao para abrir a transmissao oficial.`,
+      );
       return;
     }
-
-    const { source = 'manual', allowMutedBoot = false } = options;
 
     manualPauseRef.current = false;
     setCurrentStation(station);
@@ -150,6 +208,11 @@ const RadioPlayer = () => {
     setNeedsGesture(false);
 
     try {
+      const audio = await prepareAudio(station);
+      if (!audio) {
+        return;
+      }
+
       clearPendingUnmute();
 
       audio.muted = allowMutedBoot;
@@ -339,6 +402,9 @@ const RadioPlayer = () => {
   useEffect(() => {
     return () => {
       clearPendingUnmute();
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+      }
     };
   }, []);
 

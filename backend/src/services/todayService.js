@@ -22,29 +22,59 @@ const TODAY_BY_DATE = {
   '05-20': {
     brazil: [
       {
-        title: 'Dia Nacional do Técnico e Auxiliar de Enfermagem',
-        summary:
-          'Reconhece profissionais essenciais no cuidado direto com pacientes e no funcionamento diario do sistema de saude.',
-        source: 'Cofen / conselhos regionais de enfermagem',
-      },
-      {
+        date: '20 de maio',
         title: 'Dia Nacional do Pedagogo',
         summary:
-          'Valoriza profissionais da educacao que organizam processos de aprendizagem e fortalecem a relacao entre escola, familia e sociedade.',
-        source: 'Lei nº 13.083/2015',
+          'Homenageia profissionais dedicados a educacao, formacao humana, orientacao pedagogica e gestao dos processos de ensino.',
+        why:
+          'A data foi instituida pela Lei 13.083/2015 para valorizar especialistas em educacao e lembrar a importancia da pedagogia na escola e em outros ambientes de aprendizagem.',
+        source: 'Lei 13.083/2015',
+      },
+      {
+        date: '20 de maio',
+        title: 'Dia Nacional do Medicamento Generico',
+        summary:
+          'Conscientiza sobre a importancia dos medicamentos genericos para ampliar o acesso a tratamentos mais baratos, seguros e eficazes.',
+        why:
+          'A data relembra a politica brasileira de genericos, consolidada pela Lei 9.787/1999, que fortaleceu a concorrencia e ajudou a reduzir custos para a populacao.',
+        source: 'Biblioteca Virtual em Saude / Ministerio da Saude',
+      },
+      {
+        date: '20 de maio',
+        title: 'Dia do Comissario de Menores',
+        summary:
+          'Reconhece o trabalho de profissionais que atuam na protecao, orientacao e garantia de direitos de criancas e adolescentes.',
+        why:
+          'A data destaca a importancia da protecao da infancia e juventude e do acompanhamento de situacoes de risco social.',
+        source: 'Calendarios civicos brasileiros',
+      },
+      {
+        date: '20 de maio',
+        title: 'Dia Nacional do Tecnico e Auxiliar de Enfermagem',
+        summary:
+          'Valoriza profissionais essenciais no cuidado direto com pacientes e no funcionamento diario do sistema de saude.',
+        why:
+          'A data foi escolhida em alusao a Ana Neri e encerra a Semana da Enfermagem, reforcando reconhecimento, seguranca e valorizacao da categoria.',
+        source: 'Cofen / conselhos regionais de enfermagem',
       },
     ],
     world: [
       {
+        date: '20 de maio',
         title: 'Dia Mundial das Abelhas',
         summary:
           'Data reconhecida pela ONU para lembrar a importancia das abelhas e outros polinizadores para alimentos, biodiversidade e equilibrio ambiental.',
+        why:
+          'Foi proclamada pela ONU para chamar atencao para a queda de polinizadores e incentivar a protecao de seus habitats.',
         source: 'FAO / ONU',
       },
       {
+        date: '20 de maio',
         title: 'Dia Mundial da Metrologia',
         summary:
           'Celebra a ciencia das medicoes e a assinatura da Convencao do Metro, em 20 de maio de 1875.',
+        why:
+          'Existe para lembrar que padroes de medida confiaveis sustentam ciencia, comercio, industria, saude e politicas publicas.',
         source: 'BIPM / OIML',
       },
     ],
@@ -89,15 +119,19 @@ const UPCOMING_IMPORTANT_DATES = [
 const DEFAULT_TODAY = {
   brazil: [
     {
+      date: 'Hoje',
       title: 'Data brasileira em verificacao',
       summary: 'O calendario local sera ampliado com novas datas nacionais, estaduais e culturais.',
+      why: 'Quando nao houver data confirmada, o sistema informa que a curadoria ainda esta em verificacao.',
       source: 'World Pulse',
     },
   ],
   world: [
     {
+      date: 'Hoje',
       title: 'Calendario mundial em verificacao',
       summary: 'O painel destaca datas globais importantes quando houver registro confiavel para o dia.',
+      why: 'Quando nao houver data confirmada, o sistema informa que a curadoria ainda esta em verificacao.',
       source: 'World Pulse',
     },
   ],
