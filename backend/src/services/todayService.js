@@ -19,6 +19,44 @@ const formatDateParts = (date = new Date()) => {
 };
 
 const TODAY_BY_DATE = {
+  '05-22': {
+    brazil: [
+      {
+        date: '22 de maio',
+        title: 'Dia do Apicultor',
+        summary:
+          'Homenageia profissionais que trabalham com criacao, manejo e protecao de abelhas, alem da producao de mel, cera, propolis e outros derivados.',
+        why:
+          'A data valoriza a apicultura como atividade produtiva e ambiental, ja que as abelhas sao essenciais para a polinizacao e para o equilibrio dos ecossistemas.',
+        source: 'Calendarios civicos brasileiros / setor agropecuario',
+      },
+    ],
+    world: [
+      {
+        date: '22 de maio',
+        title: 'Dia Internacional da Biodiversidade',
+        summary:
+          'Data das Nacoes Unidas para lembrar a importancia da diversidade de especies, ecossistemas e recursos geneticos para a vida no planeta.',
+        why:
+          'Foi proclamada para aumentar a compreensao sobre a perda de biodiversidade e marca a adocao do texto da Convencao sobre Diversidade Biologica em 22 de maio de 1992.',
+        source: 'ONU / Convencao sobre Diversidade Biologica',
+      },
+    ],
+    history: [
+      {
+        year: '1992',
+        title: 'Convencao sobre Diversidade Biologica',
+        summary:
+          'O texto da convencao foi adotado em Nairobi e virou uma das bases globais para proteger biodiversidade.',
+      },
+      {
+        year: '1906',
+        title: 'Irmaos Wright recebem patente',
+        summary:
+          'A patente do aviao dos irmaos Wright foi concedida nos Estados Unidos, marco importante na historia da aviacao.',
+      },
+    ],
+  },
   '05-20': {
     brazil: [
       {
