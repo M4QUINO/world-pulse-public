@@ -31,6 +31,8 @@ const SOCKET_URL = import.meta.env.VITE_SOCKET_URL?.trim() || undefined;
 const DESKTOP_PAGE_SIZE = 9;
 const MOBILE_PAGE_SIZE = 5;
 const MOBILE_MAX_RENDERED_ITEMS = 35;
+const UPDATE_CHECK_INTERVAL_MS = 60 * 1000;
+const SILENT_REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 
 const CATEGORY_FILTERS = [
   { value: 'todas', label: 'Todas' },
@@ -180,11 +182,17 @@ const AppContent = () => {
   const sentinelRef = useRef(null);
   const activeCategoryRef = useRef(activeCategory);
   const searchRef = useRef(search);
+  const metaRef = useRef(null);
+  const lastSilentRefreshRef = useRef(0);
 
   useEffect(() => {
     activeCategoryRef.current = activeCategory;
     searchRef.current = search;
   }, [activeCategory, search, isMobileViewport]);
+
+  useEffect(() => {
+    metaRef.current = meta;
+  }, [meta]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -224,10 +232,16 @@ const AppContent = () => {
     }
   };
 
-  const loadFeed = async ({ page = 1, reset = false, category = activeCategory, searchTerm = search } = {}) => {
-    if (reset) {
+  const loadFeed = async ({
+    page = 1,
+    reset = false,
+    category = activeCategory,
+    searchTerm = search,
+    silent = false,
+  } = {}) => {
+    if (reset && !silent) {
       setLoadingFeed(true);
-    } else {
+    } else if (!reset) {
       setLoadingMore(true);
     }
 
@@ -253,13 +267,78 @@ const AppContent = () => {
     } catch (requestError) {
       setError('Nao consegui carregar o feed infinito agora.');
     } finally {
-      setLoadingFeed(false);
+      if (!silent) {
+        setLoadingFeed(false);
+      }
       setLoadingMore(false);
     }
   };
 
+  const refreshVisibleContent = async ({ silent = true } = {}) => {
+    await Promise.all([
+      fetchShellData(),
+      loadFeed({
+        page: 1,
+        reset: true,
+        category: activeCategoryRef.current,
+        searchTerm: searchRef.current,
+        silent,
+      }),
+    ]);
+  };
+
   useEffect(() => {
     fetchShellData();
+  }, []);
+
+  useEffect(() => {
+    const syncNews = async ({ force = false } = {}) => {
+      try {
+        const metaResponse = await axios.get(`${API_BASE}/meta`, {
+          params: {
+            t: Date.now(),
+          },
+        });
+
+        const incomingMeta = metaResponse.data;
+        const previousMeta = metaRef.current;
+        const incomingLastUpdate = incomingMeta?.lastUpdatedAt || '';
+        const previousLastUpdate = previousMeta?.lastUpdatedAt || '';
+        const nextUpdateAt = incomingMeta?.nextUpdateAt ? new Date(incomingMeta.nextUpdateAt).getTime() : 0;
+        const now = Date.now();
+        const updateWindowPassed = nextUpdateAt > 0 && now >= nextUpdateAt;
+        const enoughTimeForSilentRefresh = now - lastSilentRefreshRef.current >= SILENT_REFRESH_INTERVAL_MS;
+        const hasNewRound = incomingLastUpdate && incomingLastUpdate !== previousLastUpdate;
+
+        setMeta(incomingMeta);
+
+        if (force || hasNewRound || updateWindowPassed || enoughTimeForSilentRefresh) {
+          lastSilentRefreshRef.current = now;
+          await refreshVisibleContent({ silent: true });
+        }
+      } catch (requestError) {
+        console.warn('Atualizacao continua falhou, nova tentativa em breve.', requestError);
+      }
+    };
+
+    const interval = window.setInterval(() => {
+      syncNews();
+    }, UPDATE_CHECK_INTERVAL_MS);
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        syncNews({ force: true });
+      }
+    };
+
+    window.addEventListener('focus', handleVisibilityChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener('focus', handleVisibilityChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -443,7 +522,9 @@ const AppContent = () => {
               <div className="rounded-[1.6rem] border border-white/15 bg-white/75 px-5 py-5 dark:bg-white/6">
                 <div className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Debates quentes</div>
                 <div className="mt-2 text-3xl font-semibold text-slate-950 dark:text-white">{debates.length}</div>
-                <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">Pautas com conversa anonima ativa.</div>
+                <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                  Atualizacao continua ligada em segundo plano.
+                </div>
               </div>
             </div>
           </div>
