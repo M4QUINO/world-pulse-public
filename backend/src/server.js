@@ -11,6 +11,7 @@ const { addComment, getCommentsBySlug, getTrendingDebates, seedCommentsStore } =
 const { getEditorial, getFeed, getMeta, getNews, fetchNewNews, seedStore } = require('./services/newsService');
 const { getStudyHubData, searchStudyMaterials } = require('./services/studentResearchService');
 const { getTodayBrief } = require('./services/todayService');
+const { getCivicHubData, searchCivicResearch } = require('./services/civicResearchService');
 
 const app = express();
 const server = http.createServer(app);
@@ -86,6 +87,19 @@ app.get('/api/study/search', (req, res) => {
 
 app.get('/api/today', (req, res) => {
   res.json(getTodayBrief());
+});
+
+app.get('/api/civic/hub', (req, res) => {
+  res.json(getCivicHubData());
+});
+
+app.get('/api/civic/search', (req, res) => {
+  res.json(
+    searchCivicResearch({
+      query: req.query.q,
+      target: req.query.target,
+    }),
+  );
 });
 
 app.get('/api/debates', (req, res) => {
